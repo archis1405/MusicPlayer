@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity , Button } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const PlayScreen = () => {
@@ -26,6 +26,13 @@ const PlayScreen = () => {
             <Text style={styles.buttonText}> Next </Text>
           </TouchableOpacity>
         </View>
+
+        <View style={{ marginTop: 30 }}>
+            <Button title="Go to Home" onPress={() => navigation.navigate('Home')} />
+                
+            <Button title="Go to Search" onPress={() => navigation.navigate('Search')} />
+        </View>
+
       </View>
     </SafeAreaView>
   );
