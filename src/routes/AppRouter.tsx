@@ -20,7 +20,6 @@ function MainTabs({ route }: any) {
     <Tab.Navigator initialRouteName={initialScreen} screenOptions={{ headerShown: false }}>
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Search" component={SearchScreen} />
-      <Tab.Screen name="Player" component={PlayerScreen} />
     </Tab.Navigator>
   );
 }

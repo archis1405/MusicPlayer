@@ -1,3 +1,5 @@
+import { usePlayerStore } from '../store/playerStore';
+
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity , Button } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -7,37 +9,40 @@ import { RootStackParamList } from '../Types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Player'>;
 
+
 const PlayScreen = ({ navigation }: Props) => {
+  const { currentSong, isPlaying, togglePlay, playNext, playPrev } = usePlayerStore();
+
+  const artistNames = currentSong?.artists?.primary?.map(a => a.name).join(', ') || 'Artist Name';
+
   return (
     <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
       <View style={styles.content}>
         <Text style={styles.title}>Now Playing</Text>
 
         <View style={styles.playerBox}>
-          <Text style={styles.song}>Song Title</Text>
-          <Text style={styles.artist}>Artist Name</Text>
+          <Text style={styles.song}>{currentSong?.name || 'Song Title'}</Text>
+          <Text style={styles.artist}>{artistNames}</Text>
         </View>
 
         <View style={styles.controls}>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}> Prev </Text>
+          <TouchableOpacity style={styles.button} onPress={playPrev}>
+            <Text style={styles.buttonText}>⏮️</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.playButton}>
-            <Text style={styles.buttonText}> Play </Text>
+          <TouchableOpacity style={styles.playButton} onPress={togglePlay}>
+            <Text style={styles.buttonText}>{isPlaying ? '⏸️' : '▶️'}</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}> Next </Text>
+          <TouchableOpacity style={styles.button} onPress={playNext}>
+            <Text style={styles.buttonText}>⏭️</Text>
           </TouchableOpacity>
         </View>
 
         <View style={{ marginTop: 30 }}>
-            <Button title="Go to Home" onPress={() => navigation.navigate('MainTabs', { screen: 'Home' })} />
-
-            <Button title="Go to Search" onPress={() => navigation.navigate('MainTabs', { screen: 'Search' })} />
+          <Button title="Go to Home" onPress={() => navigation.navigate('MainTabs', { screen: 'Home' })} />
+          <Button title="Go to Search" onPress={() => navigation.navigate('MainTabs', { screen: 'Search' })} />
         </View>
-
       </View>
     </SafeAreaView>
   );
