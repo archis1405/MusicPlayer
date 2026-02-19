@@ -1,8 +1,16 @@
 import React from 'react';
 import { View, Text, StyleSheet , Button } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { CompositeScreenProps } from '@react-navigation/native';
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-const HomeScreen = () => {
+
+import { RootStackParamList , BottomTabParamList } from '../Types';
+
+type Props = CompositeScreenProps<BottomTabScreenProps<BottomTabParamList, 'Home'>,NativeStackScreenProps<RootStackParamList>>;
+
+const HomeScreen = ( { navigation }: Props ) => {
   return (
     <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
      
@@ -27,7 +35,7 @@ const HomeScreen = () => {
             </View>
 
         </View>
-        
+
     </SafeAreaView>
   );
 };

@@ -2,7 +2,12 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity , Button } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const PlayScreen = () => {
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../Types';
+
+type Props = NativeStackScreenProps<RootStackParamList, 'Player'>;
+
+const PlayScreen = ({ navigation }: Props) => {
   return (
     <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
       <View style={styles.content}>
@@ -28,9 +33,9 @@ const PlayScreen = () => {
         </View>
 
         <View style={{ marginTop: 30 }}>
-            <Button title="Go to Home" onPress={() => navigation.navigate('Home')} />
-                
-            <Button title="Go to Search" onPress={() => navigation.navigate('Search')} />
+            <Button title="Go to Home" onPress={() => navigation.navigate('MainTabs', { screen: 'Home' })} />
+
+            <Button title="Go to Search" onPress={() => navigation.navigate('MainTabs', { screen: 'Search' })} />
         </View>
 
       </View>
