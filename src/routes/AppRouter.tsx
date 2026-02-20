@@ -19,7 +19,6 @@ import { usePlayerStore } from '../store/playerStore';
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 
-// ✅ Minimal modern icon
 const TabBarIcon = ({
   name,
   focused,
