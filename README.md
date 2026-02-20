@@ -1,50 +1,118 @@
-# Welcome to your Expo app 👋
+# 🎵 Music Player - React Native Intern Assignment
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A full-featured music streaming app built with React Native (Expo) using the JioSaavn API.
 
-## Get started
+## 📱 Features
 
-1. Install dependencies
+### Core
+- **Home Screen** — Browse trending songs, search with debounce, infinite pagination
+- **Full Player** — Artwork, seek bar, play/pause/next/prev, shuffle, repeat modes, like/download
+- **Mini Player** — Persistent bar synced with full player, tap to open full player
+- **Queue** — View queue, play any song, remove individual songs, clear all
+- **Library** — Liked songs & downloaded songs tabs
 
-   ```bash
-   npm install
-   ```
+### Bonus
+- ✅ Shuffle & Repeat modes (none / all / one)
+- ✅ Download songs for offline listening
+- ✅ Background audio playback (iOS & Android)
+- ✅ Persisted queue & settings (MMKV)
+- ✅ Recent searches
+- ✅ Liked songs
 
-2. Start the app
+## 🏗 Architecture
 
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```
+src/
+├── components/       # Reusable UI components
+│   ├── MiniPlayer.tsx
+│   └── SongCard.tsx
+├── navigation/       # React Navigation setup
+│   └── AppNavigator.tsx
+├── screens/          # Full screens
+│   ├── HomeScreen.tsx
+│   ├── PlayerScreen.tsx
+│   ├── QueueScreen.tsx
+│   ├── SearchScreen.tsx
+│   └── LibraryScreen.tsx
+├── services/         # Business logic
+│   ├── api.ts        # JioSaavn API calls
+│   ├── playerService.ts  # expo-av audio engine
+│   ├── downloadService.ts # Offline downloads
+│   └── storage.ts    # MMKV setup
+├── store/            # Zustand state management
+│   ├── playerStore.ts
+│   ├── searchStore.ts
+│   └── libraryStore.ts
+├── theme/            # Design tokens
+│   └── index.ts
+└── types/            # TypeScript types
+    └── index.ts
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## 🛠 Tech Stack
 
-## Learn more
+| Layer | Technology |
+|-------|-----------|
+| Framework | React Native (Expo SDK 51) |
+| Language | TypeScript |
+| Navigation | React Navigation v6 (Stack + Bottom Tabs) |
+| State | Zustand |
+| Storage | MMKV |
+| Audio | expo-av |
+| Downloads | expo-file-system |
 
-To learn more about developing your project with Expo, look at the following resources:
+## 🚀 Setup
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### Prerequisites
+- Node.js 18+
+- Expo CLI: `npm install -g expo-cli eas-cli`
+- Android Studio / Xcode
 
-## Join the community
+### Install
 
-Join our community of developers creating universal apps.
+```bash
+npm install
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### Run (Dev)
+
+```bash
+# Start Expo dev server
+npx expo start
+
+# Run on Android
+npx expo run:android
+
+# Run on iOS
+npx expo run:ios
+```
+
+### Build APK
+
+```bash
+# Configure EAS
+eas login
+eas build:configure
+
+# Build preview APK
+eas build --platform android --profile preview
+```
+
+## ⚖️ Trade-offs & Notes
+
+1. **MMKV** requires a native build (`expo run:android`) — doesn't work with Expo Go. If you want Expo Go compatibility, swap to `AsyncStorage` in `src/services/storage.ts`.
+
+2. **Background Audio** — On Android, a foreground service notification appears (required by OS). On iOS, `UIBackgroundModes: audio` is set in app.json.
+
+3. **Emoji icons** — Used instead of icon libraries to keep dependencies minimal. Can be swapped for `@expo/vector-icons` in production.
+
+4. **No mock data** — All data comes from `https://saavn.sumit.co`.
+
+5. **API Rate limiting** — The public JioSaavn API has no auth but may have rate limits. Searches are debounced (500ms) to minimize requests.
+
+## 📐 Key Design Decisions
+
+- **Zustand over Redux** — Simpler boilerplate for this scope; stores are colocated with their concern
+- **expo-av** — Built-in Expo audio with background playback support
+- **Single audio instance** (PlayerService singleton) — Ensures only one sound plays at a time
+- **Queue persistence** — Queue + current index saved to MMKV so state survives app restarts

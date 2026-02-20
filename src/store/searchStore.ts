@@ -1,4 +1,6 @@
 import { create } from 'zustand';
+import { Song } from '../Types';
+import { storage, StorageKeys } from '../services/storage';
 
 interface SearchStore {
   recentSearches: string[];
@@ -7,20 +9,35 @@ interface SearchStore {
   clearRecentSearches: () => void;
 }
 
+const loadRecentSearches = (): string[] => {
+  try {
+    const raw = storage.getString(StorageKeys.RECENT_SEARCHES);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+};
+
 export const useSearchStore = create<SearchStore>((set, get) => ({
-  recentSearches: [],
+  recentSearches: loadRecentSearches(),
 
   addRecentSearch: (query) => {
     const { recentSearches } = get();
-    // Remove duplicate and add to front
-    const updated = [query, ...recentSearches.filter((q) => q !== query)].slice(0, 10);
+    const filtered = recentSearches.filter((s) => s !== query);
+    const updated = [query, ...filtered].slice(0, 10);
     set({ recentSearches: updated });
+    storage.set(StorageKeys.RECENT_SEARCHES, JSON.stringify(updated));
   },
 
   removeRecentSearch: (query) => {
     const { recentSearches } = get();
-    set({ recentSearches: recentSearches.filter((q) => q !== query) });
+    const updated = recentSearches.filter((s) => s !== query);
+    set({ recentSearches: updated });
+    storage.set(StorageKeys.RECENT_SEARCHES, JSON.stringify(updated));
   },
 
-  clearRecentSearches: () => set({ recentSearches: [] }),
+  clearRecentSearches: () => {
+    set({ recentSearches: [] });
+    storage.set(StorageKeys.RECENT_SEARCHES, JSON.stringify([]));
+  },
 }));
